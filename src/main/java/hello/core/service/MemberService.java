@@ -4,5 +4,5 @@ import hello.core.member.Member;
 
 public interface MemberService {
     void join(Member member);
-    void findMember(Long memberId);
+    Member findMember(Long memberId);
 }

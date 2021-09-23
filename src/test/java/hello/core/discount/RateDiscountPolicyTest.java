@@ -8,6 +8,7 @@ import hello.core.service.order.Order;
 import hello.core.service.order.OrderService;
 import hello.core.service.order.OrderServiceImpl;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,6 +21,7 @@ class RateDiscountPolicyTest {
 
 
     @Test
+    @DisplayName("VIP는 10% 할인이 적용 되어야 한다.")
     void discount() {
         //given
         Long memberId = 1L;
@@ -29,6 +31,6 @@ class RateDiscountPolicyTest {
         Order order = orderService.createOrder(memberId, "itemA", 153500);
 
         //then
-        Assertions.assertThat(15350).isEqualTo(order.getDiscountPrice());
+        Assertions.assertThat(order.getDiscountPrice()).isEqualTo(15350);
     }
 }

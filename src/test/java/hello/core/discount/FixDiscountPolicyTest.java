@@ -19,6 +19,6 @@ class FixDiscountPolicyTest {
         // when
         int discountPrice = discountPolicy.discount(member, 5000);
         // then
-        Assertions.assertThat(1000).isEqualTo(discountPrice);
+        Assertions.assertThat(discountPrice).isEqualTo(1000);
     }
 }

@@ -8,7 +8,12 @@ import hello.core.service.member.MemberService;
 // 관례..같은 것으로 인터페이스를 구현하는 구현체가 단일 구현체라면 뒤에 Impl를 쓴다.
 public class MemberServiceImpl implements MemberService {
 
-    private MemberRepository memberRepository = new MemoryMemberRepository();
+    private final MemberRepository memberRepository;
+
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
 
     @Override
     public void join(Member member) {

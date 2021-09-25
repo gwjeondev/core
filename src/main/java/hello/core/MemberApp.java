@@ -25,6 +25,7 @@ public class MemberApp {
 
 /*      ======================= get bean =============================
         bean의 이름은 AppConfig 클래스의 method명이며, 타입으로는 MemberService, OrderService 인터페이스 임.
+        //bean 이름으로 bean 반환
         ==============================================================*/
         MemberService memberService = applicationContext.getBean("memberService", MemberService.class);
         OrderService orderService = applicationContext.getBean("orderService", OrderService.class);

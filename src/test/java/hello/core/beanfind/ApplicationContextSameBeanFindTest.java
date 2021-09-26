@@ -30,10 +30,10 @@ public class ApplicationContextSameBeanFindTest {
     @DisplayName("동일한 타입을 가지는 빈이 있을시 모두 찾기")
     void findAllBeanByType() {
         Map<String, MemberRepository> beansOfType = ac.getBeansOfType(MemberRepository.class);
-        for (MemberRepository memberRepository : beansOfType.values()) {
-            System.out.println("memberRepository = " + memberRepository);
-            assertThat(memberRepository).isInstanceOf(MemberRepository.class);
+        for (String key : beansOfType.keySet()) {
+            System.out.println("key = " + key + " bean = " + beansOfType.get(key));
         }
+        assertThat(beansOfType.size()).isEqualTo(2);
     }
 
     @Test

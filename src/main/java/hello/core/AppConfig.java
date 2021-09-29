@@ -19,6 +19,7 @@ public class AppConfig {
     // MemberRepository 역할에 대한 구현체는 MemoryMemberRepository
     @Bean
     public MemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
@@ -31,12 +32,14 @@ public class AppConfig {
     // MemberService 역할에 대한 구현체는 MemberServiceImpl
     @Bean
     public MemberService memberService() {
+        System.out.println("call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
     // OrderService 역할에 대한 구현체는 OrderServiceImpl
     @Bean
     public OrderService orderService() {
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 

@@ -17,6 +17,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Autowired // 의존관계 자동 주입
     public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        System.out.println("OrderServiceImpl");
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }

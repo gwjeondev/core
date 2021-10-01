@@ -1,6 +1,6 @@
 package hello.core.scan;
 
-import hello.core.AutoAppConfig;
+//import hello.core.AutoAppConfig;
 import hello.core.service.member.MemberServiceImpl;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +14,9 @@ public class AutoAppConfigTest {
     @DisplayName("ComponentScan basePackages 검사")
     void basePackages() {
 
-        ApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class);
+        //ApplicationContext ac = new AnnotationConfigApplicationContext(AutoAppConfig.class);
 
-        String[] beanDefinitionNames = ac.getBeanDefinitionNames(); //모든 빈 이름 반환
+        //String[] beanDefinitionNames = ac.getBeanDefinitionNames(); //모든 빈 이름 반환
         //Assertions.assertThat(beanDefinitionNames.length).isEqualTo(3);
     }
 }

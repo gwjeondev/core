@@ -15,9 +15,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Autowired // 의존관계 자동 주입
     public MemberServiceImpl(MemberRepository memberRepository) {
+        System.out.println("MemberServiceImpl");
         this.memberRepository = memberRepository;
     }
-
 
     @Override
     public void join(Member member) {

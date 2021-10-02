@@ -22,7 +22,6 @@ public class OrderServiceImpl implements OrderService{
 //  lombok의 @RequiredArgsConstructor 애노테이션을 사용함으로써 final이 붙은 필드를 자동으로 생성자로 만들어 줌으로 생성자 코드가 필요 없어짐.
     @Autowired //의존관계 자동 주입
     public OrderServiceImpl(MemberRepository memberRepository, @MainDiscountPolicy DiscountPolicy discountPolicy) {
-        System.out.println("OrderServiceImpl");
         this.memberRepository = memberRepository;
         this.discountPolicy = discountPolicy;
     }

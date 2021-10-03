@@ -2,6 +2,7 @@ package hello.core.scope;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -38,36 +39,35 @@ public class SingletonWithPrototypeTest1 {
 
         ClientBean clientBean1 = ac.getBean(ClientBean.class);
         int clientBean1Value = clientBean1.logic();
-        System.out.println("clientBean1Value = " + clientBean1Value);
 
         ClientBean clientBean2 = ac.getBean(ClientBean.class);
         int clientBean2Value = clientBean2.logic();
-        System.out.println("clientBean2Value = " + clientBean2Value);
 
-        System.out.println("clientBean1 = " + clientBean1.getPrototypeBean());
-        System.out.println("clientBean2 = " + clientBean2.getPrototypeBean());
-
-        assertThat(clientBean1.getPrototypeBean()).isSameAs(clientBean2.getPrototypeBean());
+        assertThat(clientBean1.getPrototypeBean()).isNotSameAs(clientBean2.getPrototypeBean());
 
         ac.close();
     }
 
     @Scope("singleton")
     static class ClientBean {
-        private final PrototypeBean prototypeBean;
 
-        @Autowired
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
+        //private final PrototypeBean prototypeBean; //ClientBean 생성시점에 주입
+        //ObjectFactory > ObjectProvider 자식 관계
+        private final ObjectProvider<PrototypeBean> prototypeBeanObjectProvider; //<T>에 해당하는 빈을 찾아주는 기능을 제공
+
+        public ClientBean(ObjectProvider<PrototypeBean> prototypeBeanObjectProvider) {
+            this.prototypeBeanObjectProvider = prototypeBeanObjectProvider;
         }
 
         public int logic() {
+            //<T>에 해당하는 빈을 getObject를 통해 생성하여 항상 새로운 프로토타입 빈을 가져옴.
+            PrototypeBean prototypeBean = prototypeBeanObjectProvider.getObject();
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
 
         public PrototypeBean getPrototypeBean() {
-            return prototypeBean;
+            return prototypeBeanObjectProvider.getObject();
         }
 
         @PostConstruct

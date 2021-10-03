@@ -1,0 +1,106 @@
+package hello.core.scope;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Scope;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import static org.assertj.core.api.Assertions.*;
+
+public class SingletonWithPrototypeTest1 {
+
+    @Test
+    void prototypeFind() {
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(PrototypeBean.class);
+
+        PrototypeBean prototypeBean1 = ac.getBean(PrototypeBean.class);
+        prototypeBean1.addCount();
+        assertThat(prototypeBean1.getCount()).isEqualTo(1);
+
+        PrototypeBean prototypeBean2 = ac.getBean(PrototypeBean.class);
+        prototypeBean2.addCount();
+        assertThat(prototypeBean2.getCount()).isEqualTo(1);
+    }
+
+/*    clientBean은 싱글톤 빈이므로 스프링 빈이 생성과 종료를 모두 관여한다. 즉 생성시 프로토타입 빈을 주입할 때 이 프로토타입 빈은
+    다른 Client가 clientBean을 호출하여도 항상 같은 clientBean을 반환하기에 프로토타입 빈도 역시 같은 참조를 가르킨다.
+
+    clientBean이 내부에 가지고 있는 프로토타입 빈은 이미 과거에 주입이 끝난 빈이다.
+    주입 시점에 스프링 컨테이너에 요청해서 프로토타입 빈이 새로 생성이 된 것이지, 사용 할 때마다
+    새로 생성되는 것이 아니다!*/
+    @Test
+    void singletonClientUsePrototype() {
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(ClientBean.class, PrototypeBean.class);
+
+        ClientBean clientBean1 = ac.getBean(ClientBean.class);
+        int clientBean1Value = clientBean1.logic();
+        System.out.println("clientBean1Value = " + clientBean1Value);
+
+        ClientBean clientBean2 = ac.getBean(ClientBean.class);
+        int clientBean2Value = clientBean2.logic();
+        System.out.println("clientBean2Value = " + clientBean2Value);
+
+        System.out.println("clientBean1 = " + clientBean1.getPrototypeBean());
+        System.out.println("clientBean2 = " + clientBean2.getPrototypeBean());
+
+        assertThat(clientBean1.getPrototypeBean()).isSameAs(clientBean2.getPrototypeBean());
+
+        ac.close();
+    }
+
+    @Scope("singleton")
+    static class ClientBean {
+        private final PrototypeBean prototypeBean;
+
+        @Autowired
+        public ClientBean(PrototypeBean prototypeBean) {
+            this.prototypeBean = prototypeBean;
+        }
+
+        public int logic() {
+            prototypeBean.addCount();
+            return prototypeBean.getCount();
+        }
+
+        public PrototypeBean getPrototypeBean() {
+            return prototypeBean;
+        }
+
+        @PostConstruct
+        public void init() {
+            System.out.println("ClientBean.init " + this);
+        }
+
+        @PreDestroy
+        public void destroy() {
+            System.out.println("ClientBean.destroy " + this);
+        }
+    }
+
+    @Scope("prototype")
+    static class PrototypeBean {
+        private int count = 0;
+
+        public void addCount() {
+            count++;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        @PostConstruct
+        public void init() {
+            System.out.println("PrototypeBean.init " + this);
+        }
+
+        @PreDestroy
+        public void destroy() {
+            System.out.println("PrototypeBean.destroy " + this);
+        }
+    }
+}

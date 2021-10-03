@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Provider;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -53,21 +54,30 @@ public class SingletonWithPrototypeTest1 {
 
         //private final PrototypeBean prototypeBean; //ClientBean 생성시점에 주입
         //ObjectFactory > ObjectProvider 자식 관계
-        private final ObjectProvider<PrototypeBean> prototypeBeanObjectProvider; //<T>에 해당하는 빈을 찾아주는 기능을 제공
+        //private final ObjectProvider<PrototypeBean> prototypeBeanObjectProvider; //<T>에 해당하는 빈을 찾아주는 기능을 제공
+        private final Provider<PrototypeBean> prototypeBeanObjectProvider; //<T>에 해당하는 빈을 찾아주는 기능을 제공
 
-        public ClientBean(ObjectProvider<PrototypeBean> prototypeBeanObjectProvider) {
+        @Autowired
+        public ClientBean(Provider<PrototypeBean> prototypeBeanObjectProvider) {
             this.prototypeBeanObjectProvider = prototypeBeanObjectProvider;
         }
 
+//        @Autowired
+//        public ClientBean(ObjectProvider<PrototypeBean> prototypeBeanObjectProvider) {
+//            this.prototypeBeanObjectProvider = prototypeBeanObjectProvider;
+//        }
+
         public int logic() {
             //<T>에 해당하는 빈을 getObject를 통해 생성하여 항상 새로운 프로토타입 빈을 가져옴.
-            PrototypeBean prototypeBean = prototypeBeanObjectProvider.getObject();
+            //PrototypeBean prototypeBean = prototypeBeanObjectProvider.getObject();
+            PrototypeBean prototypeBean = prototypeBeanObjectProvider.get();
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
 
         public PrototypeBean getPrototypeBean() {
-            return prototypeBeanObjectProvider.getObject();
+            //return prototypeBeanObjectProvider.getObject();
+            return prototypeBeanObjectProvider.get();
         }
 
         @PostConstruct
